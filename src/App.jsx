@@ -1,16 +1,15 @@
-import { useState } from 'react'
-import { BgGrid } from './components/ui/BgGrid'
+
 import './App.css'
+import { BgGrid } from './components/BgGrid'
+import AppNavbar from './components/Navbar'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
+
       <BgGrid>
-        
+          <AppNavbar />
+
       </BgGrid>
-    </>
   )
 }
 
