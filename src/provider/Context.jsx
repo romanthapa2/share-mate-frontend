@@ -11,7 +11,11 @@ export const useMyContext = () => {
 
 const Provider = ({ children }) => {
     const [isServerStart, setisServerStart] = useState(false);
+    const [messages, setMessages] = useState("");
+    const [filesArr, setFilesArr] = useState([]);
     const [pin, setPin] = useState("0000");
+    const [username, setUsername] = useState("host");
+    const [socket, setSocket] = useState(null);
 
     useEffect(() => {
         if (window.location.pathname === "/" || window.location.pathname === "/files") { /** working in host */
@@ -26,6 +30,7 @@ const Provider = ({ children }) => {
                 }
                 /** reset the pin */
                 setPin("0000");
+                setMessages("")
             }
         } else {
             /** working for client */
@@ -40,12 +45,55 @@ const Provider = ({ children }) => {
         }
     }, [isServerStart])
 
+    useEffect(() => {
+        if (!socket) {
+            let url = getOrigin();
+            const newSocket = io(url);
+            
+            // Handle connection errors
+            newSocket.on('connect_error', (error) => {
+                console.error('Connection error:', error);
+                toast.error('Failed to connect to server');
+            });
+
+            // Handle server errors
+            newSocket.on('error', (error) => {
+                console.error('Server error:', error);
+                toast.error(error.message || 'An error occurred');
+            });
+
+            // Handle room joining
+            newSocket.on('roomJoined', ({ success, pin }) => {
+                if (success) {
+                    toast.success('Successfully joined room');
+                    setPin(pin);
+                    setisServerStart(true);
+                }
+            });
+
+            // Handle disconnection
+            newSocket.on('disconnect', () => {
+                console.log('Disconnected from server');
+                toast.error('Disconnected from server');
+                setisServerStart(false);
+            });
+
+            setSocket(newSocket);
+        }
+        return () => {
+            socket?.disconnect();
+        };
+    }, []);
 
     return (
         <myContext.Provider value={{
             isServerStart,
             setisServerStart,
+            messages, setMessages,
+            filesArr, setFilesArr,
             pin, setPin,
+            username, setUsername,
+            socket, setSocket,
         }}>
             {children}
             <Toaster/>
