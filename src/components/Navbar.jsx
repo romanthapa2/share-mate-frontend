@@ -2,7 +2,7 @@ import React from 'react'
 import { AuroraText } from '@/components/magicui/aurora-text'
 import { ShimmerButton } from "@/components/magicui/shimmer-button";
 import { getOrigin } from '@/config/conf';
-import { useMyContext } from '@/Provider/Context';
+import { useMyContext } from '../Provider/Context';
 import { Copy, Files, MessageCircle } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -34,7 +34,7 @@ const AppNavbar = () => {
     return (
         <div className='flex justify-between items-center'>
             <h1 className="text-4xl font-bold tracking-tighter md:text-5xl lg:text-7xl text-white">
-                <AuroraText>Wifi Share</AuroraText>
+                <AuroraText>Share Mate</AuroraText>
             </h1>
 
             <div className='hidden md:block'>
